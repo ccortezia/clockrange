@@ -1,0 +1,43 @@
+version: 2
+jobs:
+    build:
+        environment:
+            PIPENV_VENV_IN_PROJECT: "true"
+            CC_TEST_REPORTER_ID: 3151ea540553aaacad0288f3889989bae39934a12646461189a3cffbe75e49ad
+
+        docker:
+            - image: circleci/python:3.7.4
+
+        steps:
+            - checkout
+
+            - run:
+                  name: Download CodeClimate Test Reporter Binary
+                  command: |
+                    wget -O cc-test-reporter https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64
+                    chmod +x ./cc-test-reporter
+
+            - restore_cache:
+                  key: deps0-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+
+            - run:
+                name: Install Python dependencies
+                command: |
+                    pipenv install --dev
+
+            - save_cache:
+                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                paths:
+                    - ".venv"
+                    - "/usr/local/bin"
+                    - "/usr/local/lib/python3.6/site-packages"
+
+            - run:
+                  name: Run tests
+                  command: |
+                      ./cc-test-reporter before-build
+                      pipenv run pytest --junit-xml=test-results/pytest/results.xml --cov-report=xml
+                      ./cc-test-reporter after-build --coverage-input-type coverage.py --exit-code $?
+
+            - store_test_results:
+                  path: test-results
