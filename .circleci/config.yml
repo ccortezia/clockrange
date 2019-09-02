@@ -18,7 +18,7 @@ jobs:
                     chmod +x ./cc-test-reporter
 
             - restore_cache:
-                  key: deps0-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                  key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
 
             - run:
                 name: Install Python dependencies
@@ -26,11 +26,25 @@ jobs:
                     pipenv install --dev
 
             - save_cache:
-                key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+                key: deps1-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
                 paths:
                     - ".venv"
-                    - "/usr/local/bin"
-                    - "/usr/local/lib/python3.6/site-packages"
+
+            - run:
+                name: Check import statements organization
+                command: pipenv run pre-commit run -a isort
+
+            - run:
+                name: Check code formatting
+                command: pipenv run pre-commit run -a black
+
+            - run:
+                name: Check flake8
+                command: pipenv run pre-commit run -a flake8
+
+            - run:
+                name: Check type hints
+                command: pipenv run pre-commit run -a mypy
 
             - run:
                   name: Run tests
