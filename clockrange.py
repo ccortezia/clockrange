@@ -3,6 +3,7 @@ __version__ = "0.0.1"
 # Standard Library Imports
 import functools
 import math
+import operator
 from dataclasses import dataclass
 from typing import Any, Iterable, Iterator, List, Tuple, Union
 
@@ -159,4 +160,4 @@ def _ticks_from_countstate(limits: CountLimits, state: CountState) -> int:
 
 
 def _multiply(integers: Iterable[int]) -> int:
-    return functools.reduce(lambda acc, curr: acc * curr, integers, 1)
+    return functools.reduce(operator.mul, integers, 1)
