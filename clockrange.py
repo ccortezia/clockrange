@@ -1,11 +1,11 @@
-__version__ = "0.0.1"
-
 # Standard Library Imports
 import functools
 import math
 import operator
 from dataclasses import dataclass
 from typing import Any, Iterable, Iterator, List, Tuple, Union
+
+__version__ = "0.0.1"
 
 __all__ = ("ClockRange", "ClockState", "ClockSpec")
 
