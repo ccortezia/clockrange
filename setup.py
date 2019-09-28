@@ -11,13 +11,13 @@ HERE = pathlib.Path(__file__).parent
 README = (HERE / "README.md").read_text()
 
 
-with io.open("clockrange/__init__.py", "rt", encoding="utf8") as f:
+with io.open("clockrange.py", "rt", encoding="utf8") as f:
     VERSION = re.search(r'__version__ = "(.*?)"', f.read(), re.M).group(1)
 
 setup(
     name="clockrange",
     version=VERSION,
-    description="Clock-like sequence assembling library",
+    description="A clock-like periodic sequence generator",
     long_description=README,
     long_description_content_type="text/markdown",
     url="https://github.com/ccortezia/clockrange/",
@@ -30,10 +30,4 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=find_packages(exclude=["tests", "tests.*"]),
-    include_package_data=True,
-    install_requires=["Click"],
-    entry_points="""
-        [console_scripts]
-        clockrange=clockrange.cli:clockrange_cli
-    """,
 )

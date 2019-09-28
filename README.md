@@ -1,2 +1,3 @@
 # clockrange
-A library to assemble clock-like sequence generators
+
+A clock-like periodic sequence generator

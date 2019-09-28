@@ -2,7 +2,7 @@
 import pytest
 
 # Local Imports
-from clockrange.core import ClockRange, ClockState, _limit_from_spec, _rendered_from_counter
+from clockrange import ClockRange, ClockState, _limit_from_spec, _rendered_from_counter
 
 
 @pytest.mark.parametrize(

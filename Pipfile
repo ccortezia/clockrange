@@ -14,7 +14,7 @@ pre-commit = "*"
 twine = "*"
 
 [packages]
-click = "*"
+black = "*"
 
 [requires]
 python_version = "3.7"
