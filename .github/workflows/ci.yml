@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.7"
+
+      - name: Install pipenv
+        run: pip install pipenv
+
+      - name: Cache pipenv virtualenv
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: ${{ runner.os }}-pipenv-${{ hashFiles('Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pipenv-
+
+      - name: Install dependencies
+        run: pipenv install --dev
+        env:
+          PIPENV_VENV_IN_PROJECT: "true"
+
+      - name: Check import statements organization
+        run: pipenv run isort --check-only --diff clockrange.py tests.py
+
+      - name: Check code formatting
+        run: pipenv run black --check clockrange.py tests.py
+
+      - name: Check flake8
+        run: pipenv run flake8 clockrange.py tests.py
+
+      - name: Check type hints
+        run: pipenv run mypy
+
+      - name: Run tests
+        run: pipenv run pytest --junit-xml=test-results/pytest/results.xml --cov-report=xml --cov-report=term-missing
